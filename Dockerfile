@@ -11,9 +11,9 @@ ENV DOCKER_TRELLO_TO_DEV_LIST="To Development" \
     DOCKER_TEST_CATALOG="testing" \
     DOCKER_PROD_CATALOG="production"
 RUN apt-get update && \
+    apt-get install -y build-essential libssl-dev libffi-dev python-dev && \
     apt-get install -y git && \
     apt-get install -y python-pip && \
-    apt-get install -y libffi-dev libssl-dev && \
     pip install trello && \
     pip install requests[security] && \
     git clone https://github.com/grahamgilbert/munki-trello.git /munki-trello && \
