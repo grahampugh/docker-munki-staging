@@ -1,6 +1,6 @@
 # docker-munki-trello
 
-This Docker image runs pebble.it's [munki-trello](https://github.com/pebbleit/munki-trello) script. For more information about it's operation and on how to obtain the needed key and token, see the Readme for the origiginal repository.
+This Docker image runs the [munki-trello](https://github.com/grahamgilbert/munki-trello) script. For more information about it's operation and on how to obtain the needed key and token, see the Readme for the original repository.
 
 # Settings
 
