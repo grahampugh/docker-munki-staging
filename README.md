@@ -58,5 +58,5 @@ $ docker run --rm \
   -e DOCKER_TRELLO_KEY=yourapikey \
   -e DOCKER_TRELLO_TOKEN=yourtoken \
   -e DOCKER_TRELLO_BOARDID=abc123 \
-  pebbleit/munki-trello
+  grahamgilbert/munki-trello
 ```
