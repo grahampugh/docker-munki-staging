@@ -1,33 +1,47 @@
 FROM python:2.7
-MAINTAINER Graham Gilbert <graham@grahamgilbert.com>
-ENV DOCKER_TRELLO_KEY="null" \
-    DOCKER_TRELLO_TOKEN="null" \
-    DOCKER_TRELLO_BOARDID="null" \
-    DOCKER_TRELLO_TO_DEV_LIST="To Development" \
-    DOCKER_TRELLO_DEV_LIST="Development" \
-    DOCKER_TRELLO_TO_TEST_LIST="To Testing" \
-    DOCKER_TRELLO_TEST_LIST="Testing" \
-    DOCKER_TRELLO_TO_PROD_LIST="To Production" \
-    DOCKER_TRELLO_MUNKI_PATH="/munki_repo" \
-    DOCKER_TRELLO_SUFFIX="Production" \
+MAINTAINER Graham Pugh <g.r.pugh@gmail.com>
+ENV DOCKER_STAGING_KEY="null" \
+    DOCKER_STAGING_TOKEN="null" \
+    DOCKER_STAGING_BOARDID="null" \
     DOCKER_DEV_CATALOG="development" \
+    DOCKER_STAGING_TO_DEV_LIST="To Development" \
+    DOCKER_STAGING_DEV_LIST="Development" \
+    DOCKER_STAGING_DEV_AUTOSTAGE="0" \
+    DOCKER_STAGING_DEV_STAGE_DAYS="0" \
+    DOCKER_STAGING_DEV_STAGE_TO="Testing" \
     DOCKER_TEST_CATALOG="testing" \
+    DOCKER_STAGING_TO_TEST_LIST="To Testing" \
+    DOCKER_STAGING_TEST_LIST="Testing" \
+    DOCKER_STAGING_TEST_AUTOSTAGE="0" \
+    DOCKER_STAGING_TEST_STAGE_DAYS="0" \
+    DOCKER_STAGING_TEST_STAGE_TO="Production" \
     DOCKER_PROD_CATALOG="production" \
-    DOCKER_TRELLO_DATE_FORMAT="%d/%m/%y" \
-    DOCKER_TRELLO_AUTO_STAGE_TO_TEST="False" \
-    DOCKER_TRELLO_AUTO_STAGE_TO_PROD="False" \
-    DOCKER_TRELLO_DEV_STAGE_DAYS="0" \
-    DOCKER_TRELLO_TEST_STAGE_DAYS="0" \
-    DOCKER_TRELLO_PRODUCTION_LIST="null"
-RUN apt-get update && \
+    DOCKER_STAGING_TO_PROD_LIST="To Production" \
+    DOCKER_STAGING_SUFFIX="Production" \
+    DOCKER_STAGING_MUNKI_PATH="/munki_repo" \
+    DOCKER_STAGING_DEFAULT_REPO="default" \
+    DOCKER_STAGING_MAKECATALOGS="/munki-tools/code/client/makecatalogs" \
+    DOCKER_STAGING_DATE_FORMAT="%d/%m/%y" \
+    DOCKER_STAGING_PRODUCTION_LIST="Production" \
+    DOCKER_STAGING_RSSDIR="null" \
+    DOCKER_STAGING_RSS_LINK_TEMPLATE="null" \
+    DOCKER_STAGING_RSS_GUID_LINK_TEMPLATE="null" \
+    DOCKER_STAGING_RSS_CATALOG_LINK_TEMPLATE="null" \
+    DOCKER_STAGING_RSS_DESCRIPTION_TEMPLATE="null" \
+    DOCKER_STAGING_RSS_ICON_URL_TEMPLATE="null"
+RUN apt-get update -y && \
+    apt-get autoremove -y && \
     apt-get install -y git && \
     pip install trello && \
     pip install requests[security] && \
+    pip install python-dateutil && \
     pip install configparser && \
-    git clone https://github.com/grahamgilbert/munki-trello.git /munki-trello && \
+    pip install PyRSS2Gen && \
+    git clone https://github.com/ox-it/munki-staging.git /etc/munki-staging && \
     git clone https://github.com/munki/munki.git /munki-tools
-COPY write_config.py /write_config.py
-RUN chmod 755 /write_config.py
-COPY run.sh /run.sh
-RUN chmod 755 /run.sh
-CMD /run.sh
+COPY munki-staging.cfg /etc/munki-staging/munki-staging-runtime.cfg 
+COPY write_config.py /etc/munki-staging/write_config.py
+RUN chmod 755 /etc/munki-staging/write_config.py
+COPY run.sh /etc/munki-staging/run.sh
+RUN chmod 755 /etc/munki-staging/run.sh
+CMD /etc/munki-staging/run.sh
